@@ -1,6 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://rhhcf026cfou"]
+[gd_scene load_steps=5 format=3 uid="uid://2v2cr5m64bcu"]
 
 [ext_resource type="Script" path="res://scripts/managers/game_scene_manager.gd" id="1_2qgpy"]
+[ext_resource type="Script" path="res://scripts/feature_tests/TestNode1.gd" id="2_lojp3"]
+[ext_resource type="Script" path="res://scripts/feature_tests/TestNode2.gd" id="3_omv27"]
+[ext_resource type="Script" path="res://scenes/game_scenes/SaveTest.gd" id="4_bklig"]
 
 [node name="GameScene" type="Node2D"]
 script = ExtResource("1_2qgpy")
+
+[node name="TestNode1" type="Node2D" parent="."]
+script = ExtResource("2_lojp3")
+
+[node name="TestNode2" type="Node2D" parent="TestNode1"]
+script = ExtResource("3_omv27")
+
+[node name="SaveTest" type="Node2D" parent="." groups=["saveable"]]
+script = ExtResource("4_bklig")
