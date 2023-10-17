@@ -1,18 +1,38 @@
 extends Node
 
-@export var save_group_name = "saveable";
+@export var player_info_file_name = "player"
 
-func _input(event):
-	if event.is_action_pressed("debug_button_7"):
-		print("try save");
-		save_game()
-		
-	if event.is_action_pressed("debug_button_8"):
-		print("try save");
-		load_game()
+@export var player_info_nodes_group_name = "player"
 
-func save_game():
-	var save_game = FileAccess.open("user://savegame.save", FileAccess.WRITE)
+@export var settings_file_name = "settings"
+
+@export var settings_nodes_group_name = "settings"
+
+@export var save_game_nodes_group_name = "saveable";
+
+func save_player_info():
+	save_file("user://" + player_info_file_name + ".save", player_info_nodes_group_name)
+	
+func load_player_info():
+	load_file("user://" + player_info_file_name + ".save", player_info_nodes_group_name)
+
+func save_options():
+	save_file("user://" + settings_file_name + ".save", settings_nodes_group_name)
+
+func load_options():
+	load_file("user://" + settings_file_name + ".save", settings_nodes_group_name)
+
+func save_game(game_name):
+	save_file("user://" + game_name + ".save", save_game_nodes_group_name)
+
+func load_game(game_name):
+	load_file("user://" + game_name + ".save", save_game_nodes_group_name)
+
+
+func save_file(file_name, save_group_name):
+	print("save file: " + file_name)
+	
+	var file_to_save = FileAccess.open(file_name, FileAccess.WRITE)
 	var save_nodes = get_tree().get_nodes_in_group(save_group_name)
 	for node in save_nodes:
 		
@@ -26,21 +46,31 @@ func save_game():
 
 		var node_data = node.call("save")
 		
+		node_data["filename"] = node.get_scene_file_path()
+		node_data["parent"] = get_parent().get_path()
+		
 		var json_string = JSON.stringify(node_data)
 		
-		save_game.store_line(json_string)
+		file_to_save.store_line(json_string)
 
-func load_game():
-	if not FileAccess.file_exists("user://savegame.save"):
+func load_file(file_name, save_group_name):
+	print("load file: " + file_name)
+	
+	if not FileAccess.file_exists(file_name):
 		return
-		
+
+	var file_to_load = FileAccess.open(file_name, FileAccess.READ)
+	
+	if file_to_load.get_length() == 0:
+		print("file was empty")
+		return
+	
 	var save_nodes = get_tree().get_nodes_in_group(save_group_name)
 	for i in save_nodes:
 		i.queue_free()
-
-	var save_game = FileAccess.open("user://savegame.save", FileAccess.READ)
-	while save_game.get_position() < save_game.get_length():
-		var json_string = save_game.get_line()
+	
+	while file_to_load.get_position() < file_to_load.get_length():
+		var json_string = file_to_load.get_line()
 
 		var json = JSON.new()
 
@@ -51,12 +81,12 @@ func load_game():
 
 		var node_data = json.get_data()
 
-		# Firstly, we need to create the object and add it to the tree and set its position.
 		var new_object = load(node_data["filename"]).instantiate()
-		get_node(node_data["parent"]).add_child(new_object)
-		new_object.call("load", node_data)
+		get_node(node_data["parent"]).call_deferred("add_child", new_object)
+		print("add child")
+		print(new_object.name)
+		new_object.call("load_data", node_data)
 
-		# Now we set the remaining variables.
 		for i in node_data.keys():
 			if i == "filename" or i == "parent" or i == "pos_x" or i == "pos_y":
 				continue

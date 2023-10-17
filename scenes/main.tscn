@@ -1,12 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://cny5g2eqpteqr"]
+[gd_scene load_steps=5 format=3 uid="uid://cny5g2eqpteqr"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_w0yqr"]
+[ext_resource type="Script" path="res://scripts/systems/save_system/save_system.gd" id="2_4g7si"]
 [ext_resource type="PackedScene" uid="uid://16hk2ehs26re" path="res://scenes/game_scenes/scene_manager.tscn" id="2_odk4s"]
-[ext_resource type="PackedScene" uid="uid://cpwjc1j8uu1kk" path="res://scenes/ui_scenes/gui.tscn" id="2_t38bb"]
+[ext_resource type="PackedScene" uid="uid://bxs34sajurpti" path="res://scenes/ui_scenes/UI.tscn" id="4_2mysc"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_w0yqr")
 
+[node name="SaveSystem" type="Node" parent="."]
+script = ExtResource("2_4g7si")
+
 [node name="SceneManager" parent="." instance=ExtResource("2_odk4s")]
 
-[node name="GUI" parent="." instance=ExtResource("2_t38bb")]
+[node name="UI" parent="." instance=ExtResource("4_2mysc")]

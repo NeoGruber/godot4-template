@@ -1,0 +1,49 @@
+[gd_scene load_steps=2 format=3 uid="uid://c2m5hukyvdiwi"]
+
+[ext_resource type="Script" path="res://scripts/managers/ui_manager.gd" id="1_hik8a"]
+
+[node name="GUIManager" type="Control" groups=["player"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hik8a")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="MenuVBox" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="MenuRowVBox" type="VBoxContainer" parent="MarginContainer/MenuVBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/MenuVBox/MenuRowVBox"]
+layout_mode = 2
+text = "Username"
+
+[node name="UsernameHBox" type="HBoxContainer" parent="MarginContainer/MenuVBox/MenuRowVBox"]
+layout_mode = 2
+tooltip_text = "Username"
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer/MenuVBox/MenuRowVBox/UsernameHBox"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="Button" type="Button" parent="MarginContainer/MenuVBox/MenuRowVBox/UsernameHBox"]
+custom_minimum_size = Vector2(60, 40)
+layout_mode = 2
+text = "Set"
+
+[connection signal="button_down" from="MarginContainer/MenuVBox/MenuRowVBox/UsernameHBox/Button" to="." method="_on_button_button_down"]
